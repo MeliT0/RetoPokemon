@@ -7,7 +7,13 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+    <div class="container">
+      <h1>Pokémon Search</h1>
+      <input type="text" id="pokemonInput" placeholder="Ingrese el nombre del Pokémon">
+      <button onclick="searchPokemon()">Buscar</button>
+      <div id="pokemonDetails"></div>
+  </div>
+
+  <script src="./main.js"></script>
   </body>
 </html>

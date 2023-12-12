@@ -1,24 +1,37 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+function searchPokemon() {
+  const inputElement = document.getElementById('pokemonInput');
+  const pokemonName = inputElement.value.toLowerCase();
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+  if (pokemonName.trim() === '') {
+      alert('Por favor, ingrese el nombre del Pokémon');
+      return;
+  }
 
-setupCounter(document.querySelector('#counter'))
+  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Pokémon no encontrado');
+          }
+          return response.json();
+      })
+      .then(data => {
+          displayPokemonDetails(data);
+      })
+      .catch(error => {
+          displayErrorMessage(error.message);
+      });
+}
+
+function displayPokemonDetails(pokemon) {
+  const detailsElement = document.getElementById('pokemonDetails');
+  detailsElement.innerHTML = `
+      <h2>${pokemon.name}</h2>
+      <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+      <p>Tipo(s): ${pokemon.types.map(type => type.type.name).join(', ')}</p>
+  `;
+}
+
+function displayErrorMessage(message) {
+  const detailsElement = document.getElementById('pokemonDetails');
+  detailsElement.innerHTML = `<p style="color: red;">${message}</p>`;
+}
